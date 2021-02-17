@@ -2,6 +2,17 @@ import string
 import argparse
 from collections import defaultdict
 
+"""
+Top-down coloring algorithm.
+1. Assume an ordered list of colors, encoded as uppercase ASCII characters.
+2. Assume a graph with integer node IDs.
+3. Rank nodes of the graph by their number of neighbors, in descending order.
+    a. Ties give priority to lower node ID.
+4. For each node
+    a. Assign the node the first color in the list of colors that is not
+       used by the node's neighbors
+"""
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -13,6 +24,12 @@ def parse_args():
 
 
 def main(infile, outfile):
+    """
+    Read the graph from infile, color it, and write it to outfile.
+
+    :param str infile: The graph data file.
+    :param str outfile: Where to save the colored graph.
+    """
     graph = read_graph(infile)
     colors = list(string.ascii_uppercase)
     colored_graph = color_graph(graph, colors)
@@ -22,6 +39,14 @@ def main(infile, outfile):
 
 
 def read_graph(fpath):
+    """
+    Read the graph data in fpath into a dict
+
+    :param str fpath: The path to the graph data file.
+    :returns: The graph where each key is a node and
+              each value is a list of its neighbors.
+    :rtype: dict
+    """
     graph = dict()
     max_node_id = 0
     for line in open(fpath, 'r'):
@@ -36,8 +61,12 @@ def read_graph(fpath):
 
 def color_graph(graph, colors):
     """
+    Color the graph using the specified colors.
+
     :param dict graph: A dictionary of nodes to neighbors
     :param list colors: A list of colors
+    :returns: Dictionary of node: color assignments
+    :rtype: dict
     """
     # First, rank nodes of the graph in descending order
     # according to the number of neighbors.
